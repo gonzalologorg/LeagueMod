@@ -160,6 +160,28 @@ end)
 
 if SERVER then return end
 
+local waitPlayerList = {}
+local waitingLP = false
+function WaitForLocalPlayer(func)
+    local lp = LocalPlayer()
+    if not IsValid(lp) then
+        table.insert(waitPlayerList, func)
+        if not waitingLP then
+            waitingLP = true
+            hook.Add("InitPostEntity", "WaitingLP", function()
+                for k, v in pairs(waitPlayerList) do
+                    v(LocalPlayer())
+                end
+
+                waitPlayerList = nil
+                hook.Remove("InitPostEntity")
+            end)
+        end
+    else
+        func(lp)
+    end
+end
+
 hook.Add("OnEntityCreated", "League.CallOnClient", function(new_ent)
     if not awaiting[new_ent:EntIndex()] then return end
 

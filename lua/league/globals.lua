@@ -1,1 +1,4 @@
-League = League or {}
+League = League or {
+    Inventory = {}
+}
+
