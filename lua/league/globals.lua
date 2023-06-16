@@ -1,4 +1,5 @@
 League = League or {
-    Inventory = {}
+    Inventory = {},
+    Resources = {},
 }
 
