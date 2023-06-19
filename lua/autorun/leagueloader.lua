@@ -1,17 +1,14 @@
 DeriveGamemode("sandbox")
 
-AddCSLuaFile("league/globals.lua.lua")
-include("league/globals.lua.lua")
+AddCSLuaFile("league/globals.lua")
+include("league/globals.lua")
 
-local files, _ = file.Find("helpers/*", "LUA")
+local files, _ = file.Find("league/helpers/*", "LUA")
 for _, fil in pairs(files) do
-    AddCSLuaFile("helpers/" .. fil)
-    include("helpers/" .. fil)
+    AddCSLuaFile("league/helpers/" .. fil)
+    include("league/helpers/" .. fil)
 end
 
-Log("Core", "Starting to load Gamemode...")
-OP = OP or {}
-local gamemodeFolderName = GM.FolderName
 -- Functions
 local function loadFolder(folder, recursive, ignore)
     local original = folder
@@ -76,6 +73,5 @@ local function loadFolder(folder, recursive, ignore)
     end
 end
 
-loadFolder("libs", nil, true)
-loadFolder("modules", true)
-Log("Core", "Finished loading addon...")
+loadFolder("league/core", true)
+loadFolder("league/content", true)

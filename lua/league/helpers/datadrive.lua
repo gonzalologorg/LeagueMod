@@ -59,7 +59,7 @@ end
 hook.Add("PlayerInitialSpawn", "NWVars.Sync", function(ply)
     local dv_table = {}
     for _, plys in pairs(player.GetAll()) do
-        for id, val in pairs(plys.nw_vars) do
+        for id, val in pairs(plys.nw_vars or {}) do
             if not val.value or val.value == val.default or val.private then continue end
             dv_table[plys] = dv_table[plys] or {}
             dv_table[plys][id] = val.value

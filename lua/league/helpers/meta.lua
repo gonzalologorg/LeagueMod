@@ -174,7 +174,7 @@ function WaitForLocalPlayer(func)
                 end
 
                 waitPlayerList = nil
-                hook.Remove("InitPostEntity")
+                hook.Remove("InitPostEntity", "WaitingLP")
             end)
         end
     else

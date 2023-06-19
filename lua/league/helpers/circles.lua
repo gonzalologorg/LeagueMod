@@ -492,6 +492,5 @@ _R.Circles = {
 	RotateVertices = RotateVertices,
 	CalculateVertices = CalculateVertices,
 }
-
-NUI.Circles = _R.Circles
+League.Circles = _R.Circles
 return _R.Circles
