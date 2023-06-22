@@ -3,6 +3,9 @@ local ENERGY = {}
 function ENERGY:Initialize()
     local owner = self:GetOwner()
     self:SetMaxValue(owner:GetMaxHealth())
+    if SERVER then
+        self:AddHook("EntityTakeDamage")
+    end
 end
 
 function ENERGY:GetValue()
