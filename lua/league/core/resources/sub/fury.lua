@@ -18,3 +18,5 @@ end
 function ENERGY:GetTickRate()
     return 0
 end
+
+League.Resources:Register("fury", ENERGY)

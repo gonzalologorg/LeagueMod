@@ -44,3 +44,5 @@ end
 function ENERGY:GetTickRate()
     return 1
 end
+
+League.Resources:Register("health", ENERGY)
