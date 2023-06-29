@@ -100,12 +100,12 @@ function League.Resources:Initialize(ply)
 end
 
 function League.Resources:AddBar(ply, id)
-    if not self.List[type] then
-        ErrorNoHaltWithStack("Invalid resource type: " .. type)
+    if not self.List[id] then
+        ErrorNoHaltWithStack("Invalid resource type: " .. id)
         return false
     end
 
-    local bar = setmetatable({}, self.List[type])
+    local bar = setmetatable(table.Copy(ENERGY), self.List[id])
     bar:SetOwner(ply)
     bar:Initialize()
 
