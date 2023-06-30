@@ -25,6 +25,17 @@ function ENT:SetupDataTables()
     self:NetworkVar("Float", 0, "NextIdle")
 end
 
+function ENT:BodyUpdate()
+end
+
+function ENT:Think()
+    self:FrameAdvance()
+    if SERVER then
+        self:NextThink(CurTime())
+        return true
+    end
+end
+
 function ENT:SetupChampion(pl)
     League.Inventory:Initialize(pl)
     League.Resources:Initialize(pl)

@@ -23,10 +23,11 @@ end
 
 function ENT:Initialize()
     self.loco:SetDeceleration(200)
-    self.loco:SetAcceleration(600)
+    self.loco:SetAcceleration(1200)
 
     self:SetModel(self.Model)
-    self:PhysicsInitBox(-Vector(12, 12, 0), Vector(12, 12, 72))
+    self:SetModelScale(1.35)
+    self:PhysicsInitBox(-Vector(20, 20, 0), Vector(20, 20, 86))
     self:ResetSequence("idle")
     self:SetNextIdle(CurTime() + self:SequenceDuration())
 end
@@ -45,12 +46,6 @@ function ENT:MoveToTarget(pos, options)
     if not path:IsValid() then return "failed" end
 
     while path:IsValid() do
-        if self.ShouldStop then
-            self.ShouldStop = false
-            path:Invalidate()
-
-            return "ok"
-        end
         -- Draw the path (only visible on listen servers or single player)
         if options.draw then
             path:Draw()
@@ -62,8 +57,6 @@ function ENT:MoveToTarget(pos, options)
 
             return "stuck"
         end
-
-        //MsgN(path:)
         --
         -- If they set maxage on options then make sure the path is younger than it
         --
@@ -101,11 +94,6 @@ function ENT:RunBehaviour()
     end
 end
 
-function ENT:Think()
-    self:NextThink(CurTime())
-
-    return true
-end
 
 function ENT:DoMousePress(left, target)
     local angle = (target - self:GetPos()):Angle()
@@ -113,9 +101,11 @@ function ENT:DoMousePress(left, target)
 
     if not left then
         self.TargetMove = target
-        self.Shouldstop = true
         if self.CurrentPath then
-            self.CurrentPath:Invalidate()
+            self.loco:FaceTowards(target)
+            self.loco:SetVelocity(Vector(0, 0, 0))
+            self.CurrentPath:Compute(self, target)
+            return
         end
     end
 end
