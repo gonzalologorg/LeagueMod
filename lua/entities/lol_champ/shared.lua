@@ -21,8 +21,11 @@ function ENT:SetupDataTables()
     self:NetworkVar("Bool", 1, "Attacking")
     self:NetworkVar("Bool", 2, "Dead")
     self:NetworkVar("Vector", 0, "Objective")
-
+    self:NetworkVar("Int", 0, "Level")
+    self:NetworkVar("Int", 1, "Experience")
     self:NetworkVar("Float", 0, "NextIdle")
+
+    self:SetLevel(1)
 end
 
 function ENT:BodyUpdate()
