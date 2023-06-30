@@ -23,6 +23,7 @@ function ENT:SetupDataTables()
     self:NetworkVar("Vector", 0, "Objective")
     self:NetworkVar("Int", 0, "Level")
     self:NetworkVar("Int", 1, "Experience")
+    self:NetworkVar("Int", 2, "Gold")
     self:NetworkVar("Float", 0, "NextIdle")
 
     self:SetLevel(1)

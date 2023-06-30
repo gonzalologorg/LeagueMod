@@ -12,6 +12,7 @@ function ENT:Initialize()
         self.Panel = vgui.Create("Panel")
         self.Panel:SetSize(ScrW(), ScrH())
         self.Panel:SetKeyboardInputEnabled(false)
+        self.Panel:SetCursor("blank")
         self.Panel.OnMouseWheeled = function(s, delta)
             self.Zoom = math.Clamp(self.Zoom + delta * 8, 0, 300)
         end
@@ -36,16 +37,22 @@ function ENT:Initialize()
 end
 
 function ENT:CreateHooks()
-    hook.Add("CalcView", self, function(s, ply, origin, ang, fov, znear, zfar)
-        if LocalPlayer() ~= self:GetOwner() and GetViewEntity() ~= self then return end
-        local res = self:CalcView(origin, ang, fov, znear, zfar)
-        if res then return res end
-    end)
+    if LocalPlayer() == self:GetOwner() then
+        hook.Add("CalcView", self, function(s, ply, origin, ang, fov, znear, zfar)
+            if LocalPlayer() ~= self:GetOwner() and GetViewEntity() ~= self then return end
+            local res = self:CalcView(origin, ang, fov, znear, zfar)
+            if res then return res end
+        end)
 
-    hook.Add("PlayerButtonDown", self, function(s, ply, btn)
-        if ply ~= self:GetOwner() then return end
-        self:PlayerButtonDown(btn)
-    end)
+        hook.Add("PlayerButtonDown", self, function(s, ply, btn)
+            if ply ~= self:GetOwner() then return end
+            self:PlayerButtonDown(btn)
+        end)
+
+        hook.Add("DrawOverlay", self, function()
+            self:DrawCursor()
+        end)
+    end
 
     hook.Add("HUDPaint", self, function(s)
         self:DrawHUD()
@@ -81,7 +88,21 @@ function ENT:IssueOrder(btn)
     net.WriteVector(tr.HitPos)
     net.SendToServer()
 
-    debugoverlay.Cross(tr.HitPos, 10, 0.1, Color(0, 255, 0), true)
+end
+
+local cursors = {
+    base = Material("lol/ui/cursors/hover_precise.vmt"),
+    ally = Material("lol/ui/cursors/hover_ally_precise.vmt"),
+    enemy = Material("lol/ui/cursors/hover_enemychamponly_precise.vmt"),
+    target = Material("lol/ui/cursors/target_precise.vmt"),
+    hover = Material("lol/ui/cursors/hover_enemy_precise_colorblind.vmt"),
+    hover_enemy = Material("lol/ui/cursors/hover_enemy_precise.vmt"),
+}
+function ENT:DrawCursor()
+    local x, y = gui.MousePos()
+    surface.SetMaterial(cursors.base)
+    surface.SetDrawColor(255, 255, 255)
+    surface.DrawTexturedRect(x, y, 48, 48)
 end
 
 function ENT:OnRemove()
@@ -147,7 +168,7 @@ function ENT:Draw()
     render.CullMode(MATERIAL_CULLMODE_CCW)
     render.SetColorModulation(1, 1, 1)
     self:DrawModel()
-    
+
     local dir = util.ScreenToWorld(gui.MouseX(), gui.MouseY())//util.AimVector( LocalViewAngles, 90, gui.MouseX(), gui.MouseY(), ScrW(), ScrH() )
     local tr = util.TraceLine({
         start = self.ViewOrigin,
