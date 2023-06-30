@@ -168,8 +168,6 @@ function ENT:Draw()
     Vector(-1, -1, -1) * 32,
     Vector(1, 1, 1) * 32)
 
-    MsgN(hitpos)
-
 end
 
 ENT.BarSize = {
@@ -180,12 +178,14 @@ ENT.BarSize = {
 function ENT:DrawHUD()
     local owner = self:GetOwner()
     local pos = self:GetPos() + Vector(0, 0, self.Height or 96)
-    local scr = pos:ToScreen()
+    pos = pos:ToScreen()
+    League.Atlas.HUD[1](pos.x - 172 / 2, pos.y - 96, 172, 80)
+    draw.SimpleTextOutlined(self.PrintName, League:Font(20), pos.x, pos.y - 68, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM, 1, color_black)
+    draw.SimpleTextOutlined(self:GetLevel(), League:Font(18), pos.x - 50, pos.y - 57, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
 
     for k, v in pairs(owner.LeagueResources) do
-        v:Draw(scr.x - self.BarSize.w / 2, scr.y - self.BarSize.h / 2, self.BarSize.w, self.BarSize.h)
+        v:Draw(pos.x - self.BarSize.w / 2, pos.y - self.BarSize.h / 2, self.BarSize.w, self.BarSize.h)
     end
-
 end
 
 net.Receive("League.Champion:Setup", function()
