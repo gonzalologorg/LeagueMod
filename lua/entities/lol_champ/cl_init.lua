@@ -151,6 +151,7 @@ LocalViewAngles = Angle(50, 180, 0)
 
 function ENT:CalcView(origin, ang, fov, znear, zfar)
     local view = {}
+    self.LerpedPos = LerpVector(FrameTime() * 10, self.LerpedPos or self:GetPos(), self:GetPos())
     view.origin = self.ViewOrigin or self:GetPos() + Vector(350, 0, 480)
     if self.Zoom > 0 then
         view.origin = view.origin + LocalViewAngles:Forward() * self.Zoom
@@ -207,12 +208,13 @@ function ENT:DrawHUD()
     local owner = self:GetOwner()
     local pos = self:GetPos() + Vector(0, 0, self.Height or 96)
     pos = pos:ToScreen()
-    League.Atlas.HUD[1](pos.x - 172 / 2, pos.y - 96, 172, 80)
-    draw.SimpleTextOutlined(self.PrintName, League:Font(20), pos.x + 4, pos.y - 68, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM, 1, color_black)
-    draw.SimpleTextOutlined(self:GetLevel(), League:Font(18), pos.x - 50, pos.y - 57, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
+    local px, py = math.ceil(pos.x), math.ceil(pos.y)
+    League.Atlas.HUD[1](px - 172 / 2, py - 96, 172, 80)
+    draw.SimpleTextOutlined(self.PrintName, League:Font(20), px + 4, py - 68, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM, 1, color_black)
+    draw.SimpleTextOutlined(self:GetLevel(), League:Font(18), px - 50, py - 57, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
 
     for k, v in pairs(owner.LeagueResources) do
-        v:Draw(pos.x - self.BarSize.w / 2 + 26, pos.y - self.BarSize.h - 32, self.BarSize.w - 30, 10)
+        v:Draw(px - self.BarSize.w / 2 + 26, py - self.BarSize.h - 32, self.BarSize.w - 30, 10)
     end
 end
 
