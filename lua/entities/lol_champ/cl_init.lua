@@ -16,6 +16,9 @@ function ENT:Initialize()
         self.Panel.OnMouseWheeled = function(s, delta)
             self.Zoom = math.Clamp(self.Zoom + delta * 8, 0, 300)
         end
+
+        self.Frame = vgui.Create("lol.hudpanel")
+        self.Frame:SetChampion(self)
     end
 
     gui.EnableScreenClicker(true)
@@ -88,6 +91,10 @@ function ENT:IssueOrder(btn)
     net.WriteVector(tr.HitPos)
     net.SendToServer()
 
+    local eff = EffectData()
+    eff:SetOrigin(tr.HitPos)
+    eff:SetNormal(tr.HitNormal)
+    util.Effect("lol_cursor", eff)
 end
 
 local cursors = {
@@ -201,11 +208,11 @@ function ENT:DrawHUD()
     local pos = self:GetPos() + Vector(0, 0, self.Height or 96)
     pos = pos:ToScreen()
     League.Atlas.HUD[1](pos.x - 172 / 2, pos.y - 96, 172, 80)
-    draw.SimpleTextOutlined(self.PrintName, League:Font(20), pos.x, pos.y - 68, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM, 1, color_black)
+    draw.SimpleTextOutlined(self.PrintName, League:Font(20), pos.x + 4, pos.y - 68, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM, 1, color_black)
     draw.SimpleTextOutlined(self:GetLevel(), League:Font(18), pos.x - 50, pos.y - 57, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
 
     for k, v in pairs(owner.LeagueResources) do
-        v:Draw(pos.x - self.BarSize.w / 2, pos.y - self.BarSize.h / 2, self.BarSize.w, self.BarSize.h)
+        v:Draw(pos.x - self.BarSize.w / 2 + 26, pos.y - self.BarSize.h - 32, self.BarSize.w - 30, 10)
     end
 end
 
