@@ -105,7 +105,7 @@ function League.Resources:AddBar(ply, id)
         return false
     end
 
-    local bar = setmetatable(table.Copy(ENERGY), self.List[id])
+    local bar = setmetatable(self.List[id], ENERGY)
     bar:SetOwner(ply)
     bar:Initialize()
 

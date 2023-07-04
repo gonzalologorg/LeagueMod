@@ -1,4 +1,5 @@
 local ENERGY = {}
+ENERGY.Name = "Health"
 
 function ENERGY:Initialize()
     local owner = self:GetOwner()
@@ -10,6 +11,19 @@ end
 
 function ENERGY:GetValue()
     return self:GetOwner():Health()
+end
+
+function ENERGY:Draw(x, y, w, h)
+    local val, max = self:GetValue(), self:GetMaxValue()
+    local perc = val / max
+
+    surface.SetDrawColor(86, 217, 46)
+    surface.DrawRect(x, y, w * perc, h)
+
+    for k = 1, math.floor(max / 100) do
+        surface.SetDrawColor(0, 0, 0)
+        surface.DrawRect(x + (w / (max / 100)) * k, y, 1, (k % 10 == 0) and h or h - 4)
+    end
 end
 
 function ENERGY:GetMaxValue()
