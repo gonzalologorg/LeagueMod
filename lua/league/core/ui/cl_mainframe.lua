@@ -1,5 +1,5 @@
 local PANEL = {}
-AccessorFunc(PANEL, "m_eChampion", "Champion", FORCE_BOOL)
+AccessorFunc(PANEL, "m_eChampion", "Champion")
 local gold = Color(227, 203, 66)
 local w, h = 558 * .8, 170 * .8
 function PANEL:Init()
@@ -45,8 +45,10 @@ function PANEL:Paint(rw, rh)
     surface.DrawTexturedRectRotated(rw / 2 - w / 2 - 16, h / 2, h * .8, h * .8, 0)
     League.Atlas.Frame.avatar(rw / 2 - w / 2 - 76, 6, 166 * .8, h)
 
-    League.Atlas.Frame.bars[3](rw / 2 - w / 2 + 54, h - 46, 373, 16, .75)
-    League.Atlas.Frame.animated(rw / 2 - w / 2 + 54, h - 46, 373, 16, .75)
+    local perc = math.Clamp(LocalPlayer():Health() / LocalPlayer():GetMaxHealth(), 0, 1)
+
+    League.Atlas.Frame.bars[3](rw / 2 - w / 2 + 54, h - 46, 373, 16, perc)
+    League.Atlas.Frame.animated(rw / 2 - w / 2 + 54, h - 46, 373, 16, perc)
     League.Atlas.Frame.bars[1](rw / 2 - w / 2 + 54, h - 46 + 18, 373, 16, 1)
 
     draw.SimpleTextOutlined(1, League:Font(22), rw / 2 - w / 2 + 12, h - 25, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
